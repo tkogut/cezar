@@ -121,7 +121,7 @@ SSH_AUTH_SOCK=/tmp/ssh-XXXX/agent.YYYY ssh -o StrictHostKeyChecking=no root@srv1
 > 
 > 1. **GitHub Actions CI/CD (Zero-Passphrase Standard)**:
 >    - W automatycznych workflow (`.github/workflows/deploy.yml`) **KATEGORYCZNIE NIE UŻYWA SIĘ** kluczy z hasłem (passphrase) ani sekretu `VPS_PASSPHRASE`.
->    - Do GitHub Secrets (`VPS_SSH_KEY`) wgrywany jest wyłącznie **dedykowany klucz deploy bez passphrase** (np. `scales_app_deploy` / ed25519).
+>    - Do GitHub Secrets (`VPS_SSH_KEY`) wgrywany jest wyłącznie **dedykowany klucz deploy bez passphrase** (standard: `vps_ci_deploy_key` / ed25519).
 >    - Żaden agent ani pipeline nie może wymagać dodawania `VPS_PASSPHRASE`.
 > 
 > 2. **Komunikacja między kontenerami na tym samym VPS (np. Cezar <-> LinkedIn Tracker)**:
