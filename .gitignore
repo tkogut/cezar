@@ -5,3 +5,13 @@ __pycache__/
 .DS_Store
 node_modules/
 .env
+.env.local
+!.env.example
+
+# Runtime volumes & data
+data/
+workspace/
+projects/
+pi/
+*.tmp
+.build.log

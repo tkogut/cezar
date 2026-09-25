@@ -1,0 +1,40 @@
+name: Deploy Cezar to VPS
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Copy files to VPS via SCP
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: srv1490214.hstgr.cloud
+          username: root
+          key: ${{ secrets.VPS_SSH_KEY }}
+          passphrase: ${{ secrets.VPS_PASSPHRASE }}
+          port: 22
+          source: "Dockerfile,docker-compose.yml,entrypoint.sh,update-password.sh"
+          target: "/docker/cezar"
+
+      - name: Restart and rebuild Cezar container
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: srv1490214.hstgr.cloud
+          username: root
+          key: ${{ secrets.VPS_SSH_KEY }}
+          passphrase: ${{ secrets.VPS_PASSPHRASE }}
+          port: 22
+          script: |
+            cd /docker/cezar
+            chmod +x entrypoint.sh update-password.sh
+            mkdir -p data pi projects workspace
+            docker compose up -d --build
+            docker system prune -f

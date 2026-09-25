@@ -1,0 +1,30 @@
+services:
+  cezar:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cezar
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - ./data:/root/.cezar
+      - ./pi:/root/.pi
+      - ./projects:/root/cezar/projects
+      - ./workspace:/workspace
+    ports:
+      - "127.0.0.1:4321:4321"
+    networks:
+      - traefik-proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.cezar.rule=Host(`cezar.srv1490214.hstgr.cloud`)"
+      - "traefik.http.routers.cezar.entrypoints=websecure"
+      - "traefik.http.routers.cezar.tls.certresolver=letsencrypt"
+      - "traefik.http.services.cezar.loadbalancer.server.port=4321"
+      - "traefik.http.routers.cezar.middlewares=cezar-auth"
+      - "traefik.http.middlewares.cezar-auth.basicauth.users=${CEZAR_BASIC_AUTH}"
+
+networks:
+  traefik-proxy:
+    external: true
