@@ -22,7 +22,9 @@ last_sync: init
 ## 📝 Decisions & Key Milestones
 - [INIT] Project initialized under AGENTS-OS v6.5 Swarm Edition.
 - [SYNC] Conflict-free distributed auto-sync enabled for `MEMORY.md` and `task.md`.
+- [VPS-SYNC] Imported Cezar stack (Docker, Traefik, entrypoint, CI/CD) from VPS to GitHub `tkogut/cezar`.
 
 ## 🔄 Machine Session Log
 <!-- Format: - [YYYY-MM-DD HH:MM UTC] [Node] [Role] Description -->
 - [INIT] [Local] [Coordinator] Swarm memory initialized with union-merge capability.
+- [2026-09-25 10:59 UTC] [Local] [Coordinator] Imported and aligned Cezar VPS environment into repo main branch.

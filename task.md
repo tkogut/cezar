@@ -6,12 +6,11 @@ sync_mode: distributed-union
 ---
 
 ## 🚀 Active Epics & Tickets
-- [ ] **T-001**: Initial project setup and domain alignment
-  - **Role**: Coordinator
-  - **Status**: READY
+<!-- No active tickets currently in progress -->
 
 ## 📦 Backlog
 <!-- Add new tasks below. Conflict-free union merge enabled. -->
 
 ## ✅ Completed Tasks
-<!-- Completed tasks move here with timestamp -->
+- [x] **T-001**: VPS orchestrator configuration import & deployment setup (2026-09-25)
+
