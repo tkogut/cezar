@@ -19,7 +19,6 @@ jobs:
           host: srv1490214.hstgr.cloud
           username: root
           key: ${{ secrets.VPS_SSH_KEY }}
-          passphrase: ${{ secrets.VPS_PASSPHRASE }}
           port: 22
           source: "Dockerfile,docker-compose.yml,entrypoint.sh,update-password.sh"
           target: "/docker/cezar"
@@ -30,7 +29,6 @@ jobs:
           host: srv1490214.hstgr.cloud
           username: root
           key: ${{ secrets.VPS_SSH_KEY }}
-          passphrase: ${{ secrets.VPS_PASSPHRASE }}
           port: 22
           script: |
             cd /docker/cezar
