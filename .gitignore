@@ -13,5 +13,8 @@ data/
 workspace/
 projects/
 pi/
+claude/
+*.claude*
 *.tmp
 .build.log
+

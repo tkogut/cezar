@@ -7,6 +7,15 @@ git config --global user.email "${GIT_USER_EMAIL:-tkogut9@gmail.com}"
 git config --global init.defaultBranch "${GIT_DEFAULT_BRANCH:-master}"
 git config --global --add safe.directory "*"
 
+# Ensure Claude Code session & credential persistence
+mkdir -p /root/.claude
+if [ -f "/root/.claude.json" ] && [ ! -L "/root/.claude.json" ]; then
+    mv /root/.claude.json /root/.claude/.claude.json
+fi
+if [ -f "/root/.claude/.claude.json" ] || [ ! -e "/root/.claude.json" ]; then
+    ln -sf /root/.claude/.claude.json /root/.claude.json
+fi
+
 # Patch Cezar provider-auth for pi model parsing (pi writes list-models to stderr)
 AUTH_JS="/usr/local/lib/node_modules/@open-mercato/cezar/dist/core/provider-auth.js"
 if [ -f "$AUTH_JS" ]; then

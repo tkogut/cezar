@@ -10,6 +10,7 @@ services:
     volumes:
       - ./data:/root/.cezar
       - ./pi:/root/.pi
+      - ./claude:/root/.claude
       - ./projects:/root/cezar/projects
       - ./workspace:/workspace
     ports:
