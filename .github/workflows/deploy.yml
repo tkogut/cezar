@@ -33,6 +33,6 @@ jobs:
           script: |
             cd /docker/cezar
             chmod +x entrypoint.sh update-password.sh
-            mkdir -p data pi projects workspace
+            mkdir -p data pi projects workspace claude
             docker compose up -d --build
             docker system prune -f
