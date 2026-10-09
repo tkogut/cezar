@@ -14,4 +14,5 @@ sync_mode: distributed-union
 ## ✅ Completed Tasks
 - [x] **T-001**: VPS orchestrator configuration import & deployment setup (2026-09-25)
 - [x] **T-002**: Persist Claude Code session & credentials volume (2026-10-07)
+- [x] **T-003**: Set deepseek-v4.1-flash default model in pi & UI (2026-10-09)
 

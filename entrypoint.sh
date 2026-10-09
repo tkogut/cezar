@@ -108,7 +108,28 @@ if [ ! -d "/workspace/.git" ]; then
     git commit -m "chore: initialize cezar workspace"
 fi
 
-# Patch Cezar web frontend for pi DeepSeek models
+# Set deepseek-v4.1-flash as default model across all projects in pi
+mkdir -p /root/.pi/agent
+python3 -c "
+import json, os
+
+settings_path = '/root/.pi/agent/settings.json'
+data = {}
+if os.path.exists(settings_path):
+    try:
+        with open(settings_path, 'r') as f:
+            data = json.load(f)
+    except Exception:
+        data = {}
+
+data['defaultProvider'] = 'openrouter'
+data['defaultModel'] = 'deepseek/deepseek-v4.1-flash'
+
+with open(settings_path, 'w') as f:
+    json.dump(data, f, indent=2)
+"
+
+# Patch Cezar web frontend for pi DeepSeek models (default: deepseek-v4.1-flash)
 for F in /usr/local/lib/node_modules/@open-mercato/cezar/web/dist/assets/new-task-form-*.js; do
     if [ -f "$F" ]; then
         python3 -c "
@@ -117,11 +138,14 @@ p = sys.argv[1]
 with open(p, 'r') as f:
     fc = f.read()
 target = 'pi:[{id:\`\`,label:\`auto\`,desc:\`Use your pi default model\`},'
-replacement = 'pi:[{id:\`\`,label:\`auto\`,desc:\`Use your pi default model\`},{id:\`openrouter/deepseek/deepseek-v4-flash-0731:free\`,label:\`DeepSeek: DeepSeek V4 Flash 0731 (free)\`,desc:\`via OpenRouter (free)\`},{id:\`openrouter/deepseek/deepseek-v4-flash-0731\`,label:\`DeepSeek: DeepSeek V4 Flash 0731\`,desc:\`via OpenRouter\`},{id:\`openrouter/deepseek/deepseek-v4.1-flash\`,label:\`DeepSeek: DeepSeek V4.1 Flash\`,desc:\`via OpenRouter\`},'
-if target in fc:
+old_rep = 'pi:[{id:\`\`,label:\`auto\`,desc:\`Use your pi default model\`},{id:\`openrouter/deepseek/deepseek-v4-flash-0731:free\`,label:\`DeepSeek: DeepSeek V4 Flash 0731 (free)\`,desc:\`via OpenRouter (free)\`},{id:\`openrouter/deepseek/deepseek-v4-flash-0731\`,label:\`DeepSeek: DeepSeek V4 Flash 0731\`,desc:\`via OpenRouter\`},{id:\`openrouter/deepseek/deepseek-v4.1-flash\`,label:\`DeepSeek: DeepSeek V4.1 Flash\`,desc:\`via OpenRouter\`},'
+replacement = 'pi:[{id:\`openrouter/deepseek/deepseek-v4.1-flash\`,label:\`DeepSeek: DeepSeek V4.1 Flash (default)\`,desc:\`via OpenRouter (multimodal vision)\`},{id:\`\`,label:\`auto (DeepSeek V4.1 Flash)\`,desc:\`Use pi default (DeepSeek V4.1 Flash)\`},{id:\`openrouter/deepseek/deepseek-v4-flash-0731:free\`,label:\`DeepSeek: DeepSeek V4 Flash 0731 (free)\`,desc:\`via OpenRouter (free)\`},{id:\`openrouter/deepseek/deepseek-v4-flash-0731\`,label:\`DeepSeek: DeepSeek V4 Flash 0731\`,desc:\`via OpenRouter\`},'
+if old_rep in fc:
+    fc = fc.replace(old_rep, replacement, 1)
+elif target in fc:
     fc = fc.replace(target, replacement, 1)
-    with open(p, 'w') as f:
-        f.write(fc)
+with open(p, 'w') as f:
+    f.write(fc)
 " "$F"
     fi
 done
@@ -144,9 +168,9 @@ if os.path.exists(static_ui):
 
 # Find current new-task-form chunk and index chunk
 old_task = "new-task-form-D5rySSrd.js"
-new_task = "new-task-form-v4flash.js"
+new_task = "new-task-form-v41flash.js"
 old_idx = "index-BjtXXvNw.js"
-new_idx = "index-v4flash.js"
+new_idx = "index-v41flash.js"
 
 if os.path.exists(os.path.join(assets_dir, old_task)):
     with open(os.path.join(assets_dir, old_task), "r") as f:
@@ -164,12 +188,14 @@ for fpath in glob.glob(os.path.join(assets_dir, "*.js")):
     with open(fpath, "r") as f:
         fc = f.read()
     mod = False
-    if old_task in fc:
-        fc = fc.replace(old_task, new_task)
-        mod = True
-    if old_idx in fc and fpath != os.path.join(assets_dir, old_idx):
-        fc = fc.replace(old_idx, new_idx)
-        mod = True
+    for ot in [old_task, "new-task-form-v4flash.js"]:
+        if ot in fc and fpath != os.path.join(assets_dir, new_task):
+            fc = fc.replace(ot, new_task)
+            mod = True
+    for oi in [old_idx, "index-v4flash.js"]:
+        if oi in fc and fpath != os.path.join(assets_dir, new_idx):
+            fc = fc.replace(oi, new_idx)
+            mod = True
     if mod:
         with open(fpath, "w") as f:
             f.write(fc)
@@ -178,7 +204,10 @@ index_html = os.path.join(web_dir, "index.html")
 if os.path.exists(index_html):
     with open(index_html, "r") as f:
         hc = f.read()
-    hc = hc.replace(old_idx, new_idx).replace(old_task, new_task)
+    for ot in [old_task, "new-task-form-v4flash.js"]:
+        hc = hc.replace(ot, new_task)
+    for oi in [old_idx, "index-v4flash.js"]:
+        hc = hc.replace(oi, new_idx)
     with open(index_html, "w") as f:
         f.write(hc)
 PYEOF

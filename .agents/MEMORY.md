@@ -26,10 +26,13 @@ last_sync: init
 - [ARCH-DEPLOY] CI/CD Zero-Passphrase Standard: GitHub Actions secrets `VPS_SSH_KEY` must use dedicated unencrypted deploy keys without `VPS_PASSPHRASE`.
 - [ARCH-NET] Cross-Container Networking: Containers on the same VPS (e.g. Cezar <-> LinkedIn Tracker) must communicate directly via Docker network `traefik-proxy` (e.g. `http://linkedin_tracker_app:8000`) or `/var/run/docker.sock`, never via loopback SSH.
 - [CLAUDE-PERSIST] Mounted `./claude:/root/.claude` volume and linked `/root/.claude.json` to retain OAuth sessions across rebuilds.
+- [PI-MODEL-DEFAULT] Configured `deepseek/deepseek-v4.1-flash` as global default model across all projects in pi settings & Cezar task UI.
 
 ## 🔄 Machine Session Log
 <!-- Format: - [YYYY-MM-DD HH:MM UTC] [Node] [Role] Description -->
 - [INIT] [Local] [Coordinator] Swarm memory initialized with union-merge capability.
 - [2026-09-25 10:59 UTC] [Local] [Coordinator] Imported and aligned Cezar VPS environment into repo main branch.
 - [2026-10-07 12:33 UTC] [Local] [Coordinator] Added Claude Code persistence mount and symlink handler.
+- [2026-10-09 12:18 UTC] [Local] [Coordinator] Set deepseek/deepseek-v4.1-flash as default pi model.
+
 
